@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Patient Detail</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f3f4f6;
+      color: #4b5563;
+    }
+    
+    /* Ensure the body and html take full height */
+    html, body {
+      height: 100%;
+      overflow: hidden; /* Prevent double scrollbars */
+    }
+
+    /* Make the main content scrollable */
+    .main-content {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto; /* Enable vertical scrolling */
+      height: 100vh; /* Ensure it takes full viewport height */
+    }
+
+    /* Sidebar should also scroll if content overflows */
+    .sidebar {
+      width: 300px; /* Increase the sidebar width */
+      transition: width 0.3s ease;
+      overflow: hidden;
+      background-color: white;
+      height: 100vh;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sidebar.collapsed {
+      width: 100px; /* Adjust collapsed width */
+    }
+
+    /* Layout styles */
+    .flex {
+      display: flex;
+    }
+    
+    .flex-1 {
+      flex: 1;
+    }
+    
+    /* Sidebar styles */
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+    }
+    
+    .sidebar-title {
+      font-size: 28px; /* Increase sidebar title size */
+      font-weight: bold;
+      color: #2563eb;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .toggle-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 30px; /* Increase toggle button size */
+      color: #2563eb;
+    }
+    
+    .sidebar-nav {
+      margin-top: 30xpx;
+    }
+    
+    .sidebar-nav ul {
+      list-style-type: none;
+    }
+    
+    .sidebar-nav li {
+      display: flex;
+      align-items: center;
+      padding: 16px; /* Increase padding for larger clickable area */
+      color: #4b5563;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .sidebar-nav li:hover {
+      background-color: #e5e7eb;
+    }
+    
+    .sidebar-nav li.active {
+      background-color: #e5e7eb;
+    }
+    
+    .sidebar-nav i {
+      font-size: 24px; /* Increase icon size */
+      margin-right: 16px; /* Add more spacing between icon and text */
+    }
+    
+    .sidebar.collapsed .sidebar-title,
+    .sidebar.collapsed .sidebar-nav li span {
+      display: none;
+    }
+    
+    .sidebar.collapsed .sidebar-nav i {
+      margin-right: 0;
+    }
+    
+    .sidebar-footer {
+      padding: 24px;
+    }
+
+    .sidebar-nav a {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .sidebar-nav li:hover a {
+      color: #2563eb;
+    }
+
+    .sidebar-nav li.active a {
+      color: #2563eb;
+    }
+    
+    /* Main content styles */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    .breadcrumb {
+      font-size: 14px;
+      color: #6b7280;
+    }
+    
+    .breadcrumb a {
+      color: #6b7280;
+      text-decoration: none;
+    }
+    
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .search-input {
+      padding: 8px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+    }
+    
+    .create-button {
+      background-color: #2563eb;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    /* Card styles */
+    .card {
+      background-color: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    .card > div:not(:last-child) {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+    }
+    
+    /* Remove the border from info-grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+    }
+    
+    .patient-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    
+    .patient-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-right: 16px;
+      object-fit: cover;
+    }
+    
+    .patient-name {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .patient-description {
+      color: #6b7280;
+    }
+    
+    /* Tabs navigation */
+    .tabs-nav {
+      display: flex;
+      gap: 24px;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 24px;
+    }
+    
+    .tab-link {
+      padding-bottom: 8px;
+      text-decoration: none;
+    }
+    
+    .tab-link.active {
+      color: #2563eb;
+      border-bottom: 2px solid #2563eb;
+    }
+    
+    .tab-link:not(.active) {
+      color: #6b7280;
+    }
+    
+    .tab-link:hover:not(.active) {
+      color: #2563eb;
+    }
+    
+    /* Section styles */
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    
+    .subsection-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .info-label {
+      color: #6b7280;
+    }
+    
+    .info-value {
+      color: #4b5563;
+    }
+    
+    .col-span-2 {
+      grid-column: span 2;
+    }
+    
+    .uploaded-image-container {
+      border: 1px solid #d1d5db;
+      padding: 16px;
+      border-radius: 6px;
+    }
+    
+    .uploaded-image {
+      width: 100%;
+      height: auto;
+    }
+    
+    /* Appointment card */
+    .appointment-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .appointment-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .appointment-date {
+      text-align: center;
+    }
+    
+    .appointment-month {
+      color: #6b7280;
+    }
+    
+    .appointment-day {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .appointment-label {
+      color: #6b7280;
+      font-size: 12px;
+    }
+    
+    .appointment-value {
+      font-weight: 600;
+    }
+    
+    .appointment-status {
+      color: #10b981;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="sidebar collapsed" id="sidebar">
+      <div>
+        <div class="sidebar-header">
+          <h1 class="sidebar-title">Menu</h1>
+          <button class="toggle-button" onclick="toggleSidebar()">&#9776;</button>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li><a href="General_Dash.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+            <li><a href="Schedule_Dash.html"><i class="fas fa-calendar-alt"></i><span>Reservations</span></a></li>
+            <li class="active"><a href="Patient_Dash.html"><i class="fas fa-user-friends"></i><span>Patients</span></a></li>
+            <li><a href="treatments.html"><i class="fas fa-stethoscope"></i><span>Treatments</span></a></li>
+            <li><a href="staff.html"><i class="fas fa-users"></i><span>Staff List</span></a></li>
+            <li><a href="accounts.html"><i class="fas fa-file-invoice-dollar"></i><span>Accounts</span></a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="sidebar-footer"></div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <div>
+          <h2 class="page-title">Patient</h2>
+          <nav class="breadcrumb">
+            <a href="#">Patient List</a> / <span>Patient detail</span>
+          </nav>
+        </div>
+        <div class="header-actions">
+          <button class="create-button">Create Appointment</button>
+          <img class="user-avatar" alt="User profile picture"/>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="patient-header">
+          <img class="patient-avatar" alt="Profile picture of Patient Name"/>
+          <div>
+            <h3 class="patient-name">Patient Name</h3>
+          </div>
+        </div>
+        
+        <div class="tabs-nav">
+          <a class="tab-link active" href="#">Patient Information</a>
+          <a class="tab-link" href="#soap">Medical Record</a>
+          <a class="tab-link" href="#progress">Progress</a>
+        </div>
+        
+        <div>
+          <h4 class="section-title">Patient Information</h4>
+          <div class="info-grid">
+            <div>
+              <h class="info-label">Age</h>
+              <p class="info-value">22 years old</p>
+            </div>
+            <div>
+              <p class="info-label">Gender</p>
+              <p class="info-value">Male</p>
+            </div>
+            <div>
+              <p class="info-label">Mobile number</p>
+              <p class="info-value">0109982323</p>
+            </div>
+            <div>
+              <p class="info-label">Email Address</p>
+              <p class="info-value">willie.jennings@mail.com</p>
+            </div>
+            <div>
+              <p class="info-label">Occupation</p>
+              <p class="info-value">Tanta</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="soap">
+          <h4 class="section-title">Medical Record</h4>
+          <div class="info-section">
+            <h5 class="subsection-title">Subjective</h5>
+            <div class="info-grid">
+              <div>
+                <p class="info-label">Treatment Type</p>
+                <p class="info-value">(e.g., manual therapy, ultrasound, exercise therapy)</p>
+              </div>
+              <div>
+                <p class="info-label">Duration</p>
+                <p class="info-value">6 months</p>
+              </div>
+              <div>
+                <p class="info-label">Primary Concern</p>
+                <p class="info-value">Pain in the back</p>
+              </div>
+              <div>
+                <p class="info-label">Date of Diagnosis</p>
+                <p class="info-value">2020/05/15</p>
+              </div>
+              <div>
+                <p class="info-label">Start of Care</p>
+                <p class="info-value">2024/01/10</p>
+              </div>
+              <div>
+                <p class="info-label">Is this episode of care directly related to a recent surgery?</p>
+                <p class="info-value">Yes</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h5 class="subsection-title">Objective</h5>
+            <div class="info-grid">
+              <div>
+                <p class="info-label">Imaging Type</p>
+                <p class="info-value">MRI</p>
+              </div>
+              <div class="col-span-2">
+                <h6 class="subsection-title">Uploaded Imaging</h6>
+                <div class="uploaded-image-container">
+                  <img class="uploaded-image" alt="Uploaded MRI scan" src="https://storage.googleapis.com/a1aa/image/HmGbJie58_xWoh_gSrBWL5Uc35pnOSziEEyxn2kKE9I.jpg"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h5 class="subsection-title">Assessment & Planning</h5>
+            <div class="info-grid">
+              <div>
+                <p class="info-label">Additional Comments</p>
+                <p class="info-value">Value 1</p>
+              </div>
+              <div>
+                <p class="info-label">Future Procedures</p>
+                <p class="info-value">Doing Electrophysiotherapy</p>
+              </div>
+              <div>
+                <p class="info-label">Frequency</p>
+                <p class="info-value">Twice a week</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="progress">
+          <h4 class="section-title">Progress</h4>
+          <div class="info-section">
+            <h5 class="subsection-title">Upcoming Appointments</h5>
+            <div class="appointment-card">
+              <div class="appointment-info">
+                <div class="appointment-date">
+                  <div class="appointment-month">Feb</div>
+                  <div class="appointment-day">01</div>
+                </div>
+                <div>
+                  <div class="appointment-label">CONDITION</div>
+                  <div class="appointment-value">Back Pain</div>
+                </div>
+                <div>
+                  <div class="appointment-label">TREATMENT</div>
+                  <div class="appointment-value">Manual Therapy</div>
+                </div>
+                <div>
+                  <div class="appointment-label">THERAPIST</div>
+                  <div class="appointment-value">Dr. Shaimma</div>
+                </div>
+              </div>
+              <div class="appointment-status">
+                <i class="fas fa-check"></i> Scheduled
+              </div>
+            </div>
+            <div class="appointment-card">
+              <div class="appointment-info">
+                <div class="appointment-date">
+                  <div class="appointment-month">Feb</div>
+                  <div class="appointment-day">08</div>
+                </div>
+                <div>
+                  <div class="appointment-label">CONDITION</div>
+                  <div class="appointment-value">Back Pain</div>
+                </div>
+                <div>
+                  <div class="appointment-label">TREATMENT</div>
+                  <div class="appointment-value">Manual Therapy</div>
+                </div>
+                <div>
+                  <div class="appointment-label">THERAPIST</div>
+                  <div class="appointment-value">Dr. Shaimma</div>
+                </div>
+              </div>
+              <div class="appointment-status">
+                <i class="fas fa-check"></i> Scheduled
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h5 class="subsection-title">Previous Appointments</h5>
+            <div class="appointment-card">
+              <div class="appointment-info">
+                <div class="appointment-date">
+                  <div class="appointment-month">Jan</div>
+                  <div class="appointment-day">15</div>
+                </div>
+                <div>
+                  <div class="appointment-label">CONDITION</div>
+                  <div class="appointment-value">Back Pain</div>
+                </div>
+                <div>
+                  <div class="appointment-label">TREATMENT</div>
+                  <div class="appointment-value">Manual Therapy</div>
+                </div>
+                <div>
+                  <div class="appointment-label">THERAPIST</div>
+                  <div class="appointment-value">Dr. Shaimma</div>
+                </div>
+              </div>
+              <div class="appointment-status">
+                <i class="fas fa-check"></i> Done
+              </div>
+            </div>
+            <div class="appointment-card">
+              <div class="appointment-info">
+                <div class="appointment-date">
+                  <div class="appointment-month">Jan</div>
+                  <div class="appointment-day">22</div>
+                </div>
+                <div>
+                  <div class="appointment-label">CONDITION</div>
+                  <div class="appointment-value">Back Pain</div>
+                </div>
+                <div>
+                  <div class="appointment-label">TREATMENT</div>
+                  <div class="appointment-value">Manual Therapy</div>
+                </div>
+                <div>
+                  <div class="appointment-label">THERAPIST</div>
+                  <div class="appointment-value">Dr. Shaimma</div>
+                </div>
+              </div>
+              <div class="appointment-status">
+                <i class="fas fa-check"></i> Done
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('collapsed');
+    }
+  </script>
+</body>
+</html>

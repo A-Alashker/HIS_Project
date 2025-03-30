@@ -1,0 +1,114 @@
+﻿/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Background Image */
+.background-image {
+    background-image: url('https://t3.ftcdn.net/jpg/08/13/98/74/360_F_813987473_1Lxa7zWE75degwDCIJ1helCSALlCXEBP.jpg');
+    background-size: cover; /* Cover the entire screen */
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+/* Auth Container */
+.auth-container {
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    padding: 15px; /* Smaller padding */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 700px; /* Smaller width */
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Smaller gap between image and form */
+}
+
+/* Image Container */
+.image-container {
+    flex: 1; /* Take up half the space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Physiotherapy Image */
+.auth-image {
+    width: 100%; /* Image takes full width of its container */
+    height: auto;
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Sign-Up Container */
+.signup-container {
+    flex: 1; /* Take up half the space */
+}
+
+.signup-container h1 {
+    margin: 0 0 10px; /* Smaller margin */
+    font-size: 18px; /* Smaller font size */
+    color: #333;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 8px; /* Smaller margin */
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 3px; /* Smaller margin */
+    font-size: 11px; /* Smaller font size */
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 6px; /* Smaller padding */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 11px; /* Smaller font size */
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Role Options */
+.role-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.role-options label {
+    font-size: 11px; /* Smaller font size */
+    color: #333;
+}
+
+/* Sign-Up Button */
+button {
+    width: 100%;
+    padding: 8px; /* Smaller padding */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px; /* Smaller font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

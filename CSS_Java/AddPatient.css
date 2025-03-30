@@ -1,0 +1,443 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0; /* Remove padding */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #1E3A8A;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #4B5563;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+.dob-inputs {
+    display: flex;
+    gap: 5px;
+}
+
+button {
+    background-color: #1E3A8A;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4529BA;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Form Section Display Control */
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+/* New Stepper Styles - Added to existing CSS */
+.progress-indicators {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+    position: relative;
+    padding: 0 20px;
+}
+
+.progress-indicators::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 40px;
+    right: 40px;
+    height: 2px;
+    background: #ccc;
+    z-index: 1;
+}
+
+.progress-line {
+    position: absolute;
+    top: 25px;
+    left: 40px;
+    height: 2px;
+    background: #1E3A8A;
+    transition: width 0.3s ease;
+    z-index: 2;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 3;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #ccc;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.step-label {
+    color: #4B5563;
+    font-size: 14px;
+    text-align: center;
+    width: 120px;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+    border-color: #1E3A8A;
+    background: #1E3A8A;
+    color: white;
+}
+
+.step.active .step-label {
+    color: #1E3A8A;
+    font-weight: bold;
+}
+
+.step.completed .step-number {
+    border-color: #1E3A8A;
+    background: white;
+    color: #1E3A8A;
+}
+
+/* Navigation buttons update */
+.navigation-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding: 0 20px;
+}
+
+.prev-button,
+.next-button,
+.save-button {
+    min-width: 100px;
+}
+
+.save-button {
+    display: none;
+}
+
+/* Stepper Responsive Styles */
+@media (max-width: 768px) {
+    .step-label {
+        font-size: 12px;
+        width: 80px;
+    }
+
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .progress-indicators::before {
+        top: 20px;
+    }
+
+    .progress-line {
+        top: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-label {
+        font-size: 10px;
+        width: 60px;
+    }
+
+    .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .progress-indicators::before {
+        top: 15px;
+    }
+
+    .progress-line {
+        top: 15px;
+    }
+
+    .navigation-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .progress-indicators {
+        order: -1;
+        margin-bottom: 15px;
+    }
+    
+}
+
+/* Add these styles to your existing CSS */
+
+.spinal-cord-container {
+    position: relative;
+    width: 100%;
+    margin: 20px 0;
+}
+
+#spinal-cord-viewer {
+    width: 100%;
+    height: 400px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.annotation-controls {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.annotation-button {
+    background-color: #1E3A8A;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.annotation-button:hover {
+    background-color: #4529BA;
+}
+
+#annotations-list {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+#annotations-list h3 {
+    margin-top: 0;
+    color: #1E3A8A;
+}
+
+#annotations-container {
+    list-style: none;
+    padding: 0;
+}
+
+.annotation-item {
+    padding: 8px;
+    margin-bottom: 8px;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.annotation-marker {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: rgba(30, 58, 138, 0.8);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.annotation-marker:hover {
+    background: rgba(30, 58, 138, 1);
+}
+
+/* Sidebar and Layout Styles */
+.flex {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar {
+    min-width: 300px;
+    height: 100vh;
+    background-color: white;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: fixed; /* Change to fixed */
+    left: 0;        /* Add left alignment */
+    top: 0;         /* Add top alignment */
+}
+
+.sidebar.collapsed {
+    min-width: 100px;
+}
+
+.sidebar.collapsed + .main-content {
+    margin-left: 100px;
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1E3A8A;
+}
+
+.toggle-button {
+    background: none;
+    border: none;
+    color: #1E3A8A;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.sidebar-nav {
+    padding: 1rem 0;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    padding: 0.875rem 1.5rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-nav li:hover {
+    background-color: #f3f4f6;
+}
+
+.sidebar-nav li.active {
+    background-color: #e5e7eb;
+}
+
+.sidebar-nav i {
+    font-size: 1.25rem;
+    width: 2rem;
+    color: #4B5563;
+}
+
+.sidebar-nav span {
+    margin-left: 0.75rem;
+    color: #4B5563;
+}
+
+.sidebar.collapsed .sidebar-title,
+.sidebar.collapsed .sidebar-nav span {
+    display: none;
+}
+
+.sidebar-nav a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.sidebar-nav li:hover a,
+.sidebar-nav li.active a {
+    color: #1E3A8A;
+}
+
+.sidebar-nav li:hover i,
+.sidebar-nav li.active i {
+    color: #1E3A8A;
+}
+
+/* Adjust main content area */
+.main-content {
+    flex: 1;
+    margin-left: 300px; /* Match sidebar width */
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    transition: margin-left 0.3s ease;
+}
+
+/* Add responsive styles for sidebar */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        z-index: 1000;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    .sidebar.collapsed + .main-content {
+        margin-left: 0;
+    }
+}

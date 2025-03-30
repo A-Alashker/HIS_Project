@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Patient</title>
+    <base href="/CSS_Java/">
+    <link rel="stylesheet" href="AddPatient.css">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="sidebar collapsed" id="sidebar">
+            <div>
+                <div class="sidebar-header">
+                    <h1 class="sidebar-title">Menu</h1>
+                    <button class="toggle-button" onclick="toggleSidebar()">&#9776;</button>
+                </div>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li><a href="/"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                        <li><a href="/Schedule"><i class="fas fa-calendar-alt"></i><span>Reservations</span></a></li>
+                        <li class="active"><a href="/Patient_Dashboard"><i class="fas fa-user-friends"></i><span>Patients</span></a></li>
+                        <li><a href="treatments.html"><i class="fas fa-stethoscope"></i><span>Treatments</span></a></li>
+                        <li><a href="staff.html"><i class="fas fa-users"></i><span>Staff List</span></a></li>
+                        <li><a href="accounts.html"><i class="fas fa-file-invoice-dollar"></i><span>Accounts</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="sidebar-footer"></div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="container">
+                <h1>Add Patient</h1>
+                
+                <!-- Section 1: Demographics and Contact -->
+                <div class="form-section" data-section="1">
+                    <div class="demographic-section">
+                        <h2>Demographic</h2>
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" placeholder="Enter first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" placeholder="Enter last name">
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <div class="dob-inputs">
+                                <input type="text" placeholder="Year" maxlength="4">
+                                <input type="text" placeholder="Month" maxlength="2">
+                                <input type="text" placeholder="Day" maxlength="2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-section">
+                        <h2>Contact Information</h2>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" placeholder="Enter patient street address">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" placeholder="Enter city here">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Mobile Phone</label>
+                            <input type="tel" id="phone" placeholder="000-000-0000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Subjective -->
+                <div class="form-section" data-section="2">
+                    <div class="subjective-section">
+                        <h2>Subjective</h2>
+                        <div class="form-group">
+                            <label for="report">Patient/Caregiver Report</label>
+                            <input type="text" id="report" placeholder="Enter patient/caregiver report">
+                        </div>
+                        <div class="form-group">
+                            <label for="primary-concern">Primary Concern</label>
+                            <input type="text" id="primary-concern" placeholder="Enter primary concern">
+                        </div>
+                        <div class="form-group">
+                            <label for="history">History of Present Condition</label>
+                            <input type="text" id="history" placeholder="Enter history of present condition">
+                        </div>
+                        <div class="form-group">
+                            <label for="diagnosis-date">Date of Diagnosis</label>
+                            <input type="text" id="diagnosis-date" placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="form-group">
+                            <label for="injury-date">Date of Injury</label>
+                            <input type="text" id="injury-date" placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="form-group">
+                            <label for="care-start">Start of Care</label>
+                            <input type="text" id="care-start" placeholder="MM/DD/YYYY">
+                        </div>
+                        <div class="form-group">
+                            <label>Is this episode of care directly related to a recent surgery?</label>
+                            <label><input type="radio" name="surgery" value="yes"> Yes</label>
+                            <label><input type="radio" name="surgery" value="no"> No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Objective -->
+                <div class="form-section" data-section="3">
+                    <div class="objective-section">
+                        <h2>Objective</h2>
+                        <div class="form-group">
+                            <label for="medical-images">Medical Images</label>
+                            <input type="text" id="medical-images" placeholder="Enter new file name">
+                            <textarea placeholder="Write your description here..."></textarea>
+                            <button class="attach-scan-button">Attach a scan</button>
+                        </div>
+                        
+                        <!-- Add 3D Spinal Cord Viewer -->
+                        <div class="form-group">
+                            <label>3D Spinal Cord Model</label>
+                            <div class="spinal-cord-container">
+                                <div id="spinal-cord-viewer"></div>
+                                <div class="annotation-controls">
+                                    <button id="add-annotation" class="annotation-button">Add Annotation</button>
+                                    <button id="clear-annotations" class="annotation-button">Clear Annotations</button>
+                                </div>
+                                <div id="annotations-list">
+                                    <h3>Annotations</h3>
+                                    <ul id="annotations-container"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Section 4: Treatment -->
+                <div class="form-section" data-section="4">
+                    <div class="treatment-section">
+                        <h2>Planned Treatment and Schedule</h2>
+                        <div class="form-group">
+                            <label for="approach">Approach</label>
+                            <input type="text" id="approach" placeholder="Begin/continue plan as outlined">
+                        </div>
+                        <div class="form-group">
+                            <label for="frequency">Frequency</label>
+                            <select id="frequency">
+                                <option value="one_per_week">One per Week</option>
+                                <option value="two_per_week">Two per Week</option>
+                                <option value="three_per_week">Three per Week</option>
+                                <option value="four_per_week">Four per Week</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">Duration</label>
+                            <select id="duration">
+                                <option value="one_week">One Week</option>
+                                <option value="two_weeks">Two Weeks</option>
+                                <option value="three_weeks">Three Weeks</option>
+                                <option value="one_month">One Month</option>
+                                <option value="two_months">Two Months</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="procedures">Planned Procedures</label>
+                            <input type="text" id="procedures" placeholder="Search...">
+                        </div>
+                        <div class="form-group">
+                            <label for="comments">Additional Comments</label>
+                            <input type="text" id="comments" placeholder="Search...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="prev-button" onclick="previousSection()">Previous</button>
+                    <div class="progress-indicators">
+                        <div class="progress-line"></div>
+                        <div class="step active" data-section="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Demographics</div>
+                        </div>
+                        <div class="step" data-section="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Subjective</div>
+                        </div>
+                        <div class="step" data-section="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Objective</div>
+                        </div>
+                        <div class="step" data-section="4">
+                            <div class="step-number">4</div>
+                            <div class="step-label">Treatment</div>
+                        </div>
+                    </div>  
+                    <button class="next-button" onclick="nextSection()">Next</button>
+                    <button class="save-button" onclick="saveForm()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="try1.js"></script>
+</body>
+</html>
