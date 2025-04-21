@@ -4,99 +4,245 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Appointment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            font-family: sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
+            overflow-x: hidden;
         }
-        .navbar {
-            background-color: #023047;
-            padding: 15px;
-            text-align: left;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 15px;
-            font-size: 18px;
-        }
-        .container {
-            width: 50%;
-            margin: 30px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h2 {
-            color: #023047;
-        }
-        label {
-            display: block;
-            text-align: left;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .row {
+
+        .main-container {
             display: flex;
-            gap: 10px;
+            min-height: 100vh;
         }
-        .row input {
+
+        .content-wrapper {
             flex: 1;
+            overflow-y: auto;
+            height: 100vh;
+            padding: 1.5rem;
         }
-        button {
-            background-color: black;
-            color: white;
-            padding: 10px;
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            width: 300px;
+            transition: width 0.3s ease;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.collapsed {
+            width: 100px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .sidebar-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2563eb;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .toggle-button {
+            background: none;
             border: none;
-            width: 100%;
-            font-size: 18px;
-            margin-top: 20px;
             cursor: pointer;
-            border-radius: 5px;
+            font-size: 24px;
+            color: #2563eb;
         }
-        button:hover {
-            background-color: #333;
+
+        .sidebar-nav {
+            margin-top: 30px;
+        }
+
+        .sidebar-nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            color: #4b5563;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-nav li:hover {
+            background-color: #e5e7eb;
+        }
+
+        .sidebar-nav li.active {
+            background-color: #e5e7eb;
+        }
+
+        .sidebar-nav i {
+            font-size: 24px;
+            margin-right: 16px;
+            color: #4b5563;  /* Default icon color */
+        }
+
+        .sidebar-nav li:hover i,
+        .sidebar-nav li.active i {
+            color: #2563eb;  /* Hover/active icon color */
+        }
+
+        .sidebar-nav a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .sidebar-nav li:hover a,
+        .sidebar-nav li.active a {
+            color: #2563eb;
+        }
+
+        .sidebar.collapsed .sidebar-title,
+        .sidebar.collapsed .sidebar-nav li span {
+            display: none;
+        }
+
+        .sidebar.collapsed .sidebar-nav i {
+            margin-right: 0;
+        }
+
+        .container {
+            max-width: 768px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+        }
+
+        .form-group textarea {
+            resize: none;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #2563eb;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #1d4ed8;
         }
     </style>
 </head>
 <body>
-
-    <div class="navbar">
-        <a href="#">Dashboard</a>
-        <a href="#">Patient</a>
-        <a href="#">Schedule</a>
-        <a href="#">Finance</a>
-        <a href="#">Setting</a>
-    </div>
-
-    <div class="container">
-        <h2>Add Appointment</h2>
-        
-        <label>Patient Name</label>
-        <input type="text" placeholder="Enter patient name">
-
-        <label>Date & Time</label>
-        <div class="row">
-            <input type="date">
-            <input type="time">
+    <div class="main-container">
+        <!-- Sidebar with matching style -->
+        <div class="sidebar collapsed" id="sidebar">
+            <div>
+                <div class="sidebar-header">
+                    <h1 class="sidebar-title">Menu</h1>
+                    <button class="toggle-button" onclick="toggleSidebar()">&#9776;</button>
+                </div>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li><a href="/"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                        <li class="active"><a href="/Schedule"><i class="fas fa-calendar-alt"></i><span>Reservations</span></a></li>
+                        <li><a href="/Patient_Dashboard"><i class="fas fa-user-friends"></i><span>Patients</span></a></li>
+                        <li><i class="fas fa-stethoscope"></i><span>Treatments</span></li>
+                        <li><i class="fas fa-users"></i><span>Staff List</span></li>
+                        <li><i class="fas fa-file-invoice-dollar"></i><span>Accounts</span></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="sidebar-footer"></div>
         </div>
 
-        <label>Additional Notes</label>
-        <textarea rows="4" placeholder="Enter additional notes here..."></textarea>
-
-        <button>Save Appointment</button>
+        <div class="content-wrapper">
+            <div class="container">
+                <h2>Add Appointment</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="patient-name">Patient Name</label>
+                        <input type="text" id="patient-name" placeholder="Enter patient's name">
+                    </div>
+                    <div class="form-group">
+                        <label for="doctor">Doctor</label>
+                        <select id="doctor">
+                            <option>Select Doctor</option>
+                            <option>Dr. Smith</option>
+                            <option>Dr. John</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Appointment Date</label>
+                        <input type="date" id="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time</label>
+                        <input type="time" id="time">
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Notes</label>
+                        <textarea id="notes" placeholder="Additional notes"></textarea>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
 
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+    </script>
 </body>
 </html>

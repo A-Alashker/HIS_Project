@@ -1,283 +1,466 @@
+<!DOCTYPE html>
 <html lang="en">
- <head>
+<head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-   Dashboard
-  </title>
-  <script src="https://cdn.tailwindcss.com">
-  </script>
+  <title>Dashboard</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
- </head>
- <body class="bg-gray-100">
-  <nav class="bg-blue-900 text-white p-4 flex justify-between">
-   <div class="flex space-x-4">
-    <a class="hover:underline" href="#">
-     Dashboard
-    </a>
-    <a class="hover:underline" href="#">
-     Patient
-    </a>
-    <a class="hover:underline" href="#">
-     Schedule
-    </a>
-    <a class="hover:underline" href="#">
-     Finance
-    </a>
-    <a class="hover:underline" href="#">
-     Setting
-    </a>
-   </div>
-  </nav>
-  <div class="p-4">
-   <div class="bg-blue-900 text-white p-6 rounded-lg mb-4">
-    <h1 class="text-2xl font-bold">
-     Welcome, Dr. Shaimma.
-    </h1>
-    <p>
-     Let's get moving.
-    </p>
-    <p>
-     Saturday, March 08, 2025 07:57:03 PM
-    </p>
-   </div>
-   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="bg-white p-6 rounded-lg shadow">
-     <div class="flex justify-between items-center mb-4">
-      <button class="text-xl">
-       <i class="fas fa-chevron-left">
-       </i>
-      </button>
-      <div class="text-center">
-       <p class="text-blue-500 font-bold">
-        March
-       </p>
-       <p class="text-blue-500 font-bold">
-        2025
-       </p>
+  <style>
+    /* General styles */
+    body {
+      background-color: #f3f4f6;
+      display: flex;
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* Sidebar styles */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      width: 300px;
+      transition: width 0.3s ease;
+      background-color: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar.collapsed {
+      width: 100px;
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .sidebar-title {
+      font-size: 28px;
+      font-weight: bold;
+      color: #2563eb;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toggle-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 24px;
+      color: #2563eb;
+    }
+
+    .sidebar-nav {
+      margin-top: 30px;
+    }
+
+    .sidebar-nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-nav li {
+      display: flex;
+      align-items: center;
+      padding: 16px 24px;
+      color: #4b5563;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-nav li a {
+      display: flex;
+      align-items: center;
+      color: inherit;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .sidebar-nav li:hover {
+      background-color: #e5e7eb;
+    }
+
+    .sidebar-nav li.active {
+      background-color: #e5e7eb;
+    }
+
+    .sidebar-nav i {
+      font-size: 24px;
+      margin-right: 16px;
+    }
+
+    .blue-icon {
+      color: #3b82f6;
+    }
+
+    .sidebar.collapsed .sidebar-title,
+    .sidebar.collapsed .sidebar-nav li span {
+      display: none;
+    }
+
+    .sidebar.collapsed .sidebar-nav i {
+      margin-right: 0;
+    }
+
+    /* Main content styles */
+    .main-content {
+      flex: 1;
+      padding: 1.5rem;
+    }
+
+    .welcome-box {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .welcome-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #3b82f6;
+      margin-top: 0;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Widget styles */
+    .widget {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Calendar styles */
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .calendar-nav-btn {
+      border: none;
+      background: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+
+    .calendar-month {
+      text-align: center;
+    }
+
+    .month, .year {
+      color: #3b82f6;
+      font-weight: 700;
+      margin: 0.25rem;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+    }
+
+    .calendar-day {
+      padding: 0.5rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .calendar-day:hover {
+      background-color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .current-day {
+      background-color: #dbeafe;
+      border-radius: 9999px;
+    }
+
+    .current-date {
+      margin-top: 1rem;
+      font-weight: 700;
+    }
+
+    /* Appointments styles */
+    .appointments-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .appointments-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .add-appointment-btn {
+      background-color: #60a5fa;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      text-decoration: none;
+    }
+
+    .add-appointment-btn:hover {
+      background-color: #3b82f6;
+    }
+
+    .appointments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .appointment-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f3f4f6;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+
+    .appointment-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .patient-image {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 9999px;
+    }
+
+    .patient-name {
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .appointment-type, .appointment-time {
+      margin: 0;
+    }
+
+    .appointment-time {
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar collapsed" id="sidebar">
+    <div>
+      <div class="sidebar-header">
+        <h1 class="sidebar-title">Menu</h1>
+        <button class="toggle-button" onclick="toggleSidebar()">☰</button>
       </div>
-      <button class="text-xl">
-       <i class="fas fa-chevron-right">
-       </i>
-      </button>
-     </div>
-     <div class="grid grid-cols-7 text-center">
-      <div>
-       SUN
-      </div>
-      <div>
-       MON
-      </div>
-      <div>
-       TUE
-      </div>
-      <div>
-       WED
-      </div>
-      <div>
-       THU
-      </div>
-      <div>
-       FRI
-      </div>
-      <div>
-       SAT
-      </div>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       23
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       24
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       25
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       26
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       27
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       28
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       1
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       2
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       3
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       4
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       5
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       6
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       7
-      </a>
-      <a class="py-2 bg-blue-100 rounded-full cursor-pointer" href="#">
-       8
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       9
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       10
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       11
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       12
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       13
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       14
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       15
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       16
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       17
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       18
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       19
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       20
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       21
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       22
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       23
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       24
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       25
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       26
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       27
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       28
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       29
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       30
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-       31
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-      </a>
-      <a class="py-2 hover:bg-gray-200 cursor-pointer" href="#">
-      </a>
-     </div>
-     <p class="mt-4 font-bold">
-      8 Mar 2025
-     </p>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="/">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/Schedule">
+              <i class="fas fa-calendar-alt blue-icon"></i>
+              <span>Reservations</span>
+            </a>
+          </li>
+          <li>
+            <a href="/Patient_Dashboard">
+              <i class="fas fa-user-friends"></i>
+              <span>Patients</span>
+            </a>
+          </li>
+          <li>
+            <i class="fas fa-stethoscope"></i>
+            <span>Treatments</span>
+          </li>
+          <li>
+            <i class="fas fa-users"></i>
+            <span>Staff List</span>
+          </li>
+          <li>
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Accounts</span>
+          </li>
+        </ul>
+      </nav>
     </div>
-    <div class="bg-white p-6 rounded-lg shadow">
-     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-bold">
-       Today's Appointments
-      </h2>
-      <a class="bg-blue-900 text-white px-4 py-2 rounded-full hover:bg-blue-700 cursor-pointer" href="#">
-       + Add Appointment
-      </a>
-     </div>
-     <div class="space-y-4">
-      <div class="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-       <div class="flex items-center space-x-4">
-        <img alt="Patient 1 icon" class="w-10 h-10" height="50" src="https://storage.googleapis.com/a1aa/image/wCX6H1gVIgzvVtwJp6PSRcVaqVjO8jG86t3kNHwJppI.jpg" width="50"/>
-        <div>
-         <p class="font-bold">
-          Patient 1
-         </p>
-         <p>
-          Type 1
-         </p>
-        </div>
-       </div>
-       <p class="font-bold">
-        10:00 AM
-       </p>
-      </div>
-      <div class="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-       <div class="flex items-center space-x-4">
-        <img alt="Patient 2 icon" class="w-10 h-10" height="50" src="https://storage.googleapis.com/a1aa/image/_XTTQIK6GpmocGwHwK4vMhSdiVyhOx_QBFrU8qziZJU.jpg" width="50"/>
-        <div>
-         <p class="font-bold">
-          Patient 2
-         </p>
-         <p>
-          Type 2
-         </p>
-        </div>
-       </div>
-       <p class="font-bold">
-        11:30 AM
-       </p>
-      </div>
-      <div class="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-       <div class="flex items-center space-x-4">
-        <img alt="Patient 3 icon" class="w-10 h-10" height="50" src="https://storage.googleapis.com/a1aa/image/KmiWv-ou-XxCsVmZE0ZkSFY4SjYuW9Tg6PbeHtNP3Lo.jpg" width="50"/>
-        <div>
-         <p class="font-bold">
-          Patient 3
-         </p>
-         <p>
-          Type 3
-         </p>
-        </div>
-       </div>
-       <p class="font-bold">
-        02:00 PM
-       </p>
-      </div>
-     </div>
-    </div>
-   </div>
+    <div class="sidebar-footer"></div>
   </div>
- </body>
+  
+  <!-- Main content -->
+  <div class="main-content">
+    <div class="welcome-box">
+      <h1 class="welcome-title">Welcome, Dr. Shaimaa.</h1>
+      <p>Let's get moving.</p>
+      <p>Saturday, March 08, 2025 07:57:03 PM</p>
+    </div>
+    <div class="dashboard-grid">
+      <!-- Calendar Widget -->
+      <div class="widget">
+        <div class="calendar-header">
+          <button class="calendar-nav-btn">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="calendar-month">
+            <p class="month">March</p>
+            <p class="year">2025</p>
+          </div>
+          <button class="calendar-nav-btn">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        <div class="calendar-grid">
+          <div>SUN</div>
+          <div>MON</div>
+          <div>TUE</div>
+          <div>WED</div>
+          <div>THU</div>
+          <div>FRI</div>
+          <div>SAT</div>
+          <!-- Calendar Days -->
+          <a class="calendar-day" href="#">23</a>
+          <a class="calendar-day" href="#">24</a>
+          <a class="calendar-day" href="#">25</a>
+          <a class="calendar-day" href="#">26</a>
+          <a class="calendar-day" href="#">27</a>
+          <a class="calendar-day" href="#">28</a>
+          <a class="calendar-day" href="#">1</a>
+          <a class="calendar-day" href="#">2</a>
+          <a class="calendar-day" href="#">3</a>
+          <a class="calendar-day" href="#">4</a>
+          <a class="calendar-day" href="#">5</a>
+          <a class="calendar-day" href="#">6</a>
+          <a class="calendar-day" href="#">7</a>
+          <a class="calendar-day current-day" href="#">8</a>
+          <a class="calendar-day" href="#">9</a>
+          <a class="calendar-day" href="#">10</a>
+          <a class="calendar-day" href="#">11</a>
+          <a class="calendar-day" href="#">12</a>
+          <a class="calendar-day" href="#">13</a>
+          <a class="calendar-day" href="#">14</a>
+          <a class="calendar-day" href="#">15</a>
+          <a class="calendar-day" href="#">16</a>
+          <a class="calendar-day" href="#">17</a>
+          <a class="calendar-day" href="#">18</a>
+          <a class="calendar-day" href="#">19</a>
+          <a class="calendar-day" href="#">20</a>
+          <a class="calendar-day" href="#">21</a>
+          <a class="calendar-day" href="#">22</a>
+          <a class="calendar-day" href="#">23</a>
+          <a class="calendar-day" href="#">24</a>
+          <a class="calendar-day" href="#">25</a>
+          <a class="calendar-day" href="#">26</a>
+          <a class="calendar-day" href="#">27</a>
+          <a class="calendar-day" href="#">28</a>
+          <a class="calendar-day" href="#">29</a>
+          <a class="calendar-day" href="#">30</a>
+          <a class="calendar-day" href="#">31</a>
+        </div>
+        <p class="current-date">8 Mar 2025</p>
+      </div>
+      
+      <!-- Appointments -->
+      <div class="widget">
+        <div class="appointments-header">
+          <h2 class="appointments-title">Today's Appointments</h2>
+          <a href="/Appointment" class="add-appointment-btn">+ Add Appointment</a>
+        </div>
+        <div class="appointments-list">
+          <!-- Appointment 1 -->
+          <div class="appointment-item">
+            <div class="appointment-info">
+              <img src="https://storage.googleapis.com/a1aa/image/KdL7uptEMNw87WSLIZuTXZL7k0nLz5XIFnMXlk8B47k.jpg" alt="Profile picture of Patient 1" class="patient-image"/>
+              <div>
+                <p class="patient-name">Patient 1</p>
+                <p class="appointment-type">Type 1</p>
+              </div>
+            </div>
+            <p class="appointment-time">10:00 AM</p>
+          </div>
+          
+          <!-- Appointment 2 -->
+          <div class="appointment-item">
+            <div class="appointment-info">
+              <img src="https://storage.googleapis.com/a1aa/image/0UZI7xvEmJVzr8N-aJk4IlV_bfVXmbdL60jVYRmkkaA.jpg" alt="Profile picture of Patient 2" class="patient-image"/>
+              <div>
+                <p class="patient-name">Patient 2</p>
+                <p class="appointment-type">Type 2</p>
+              </div>
+            </div>
+            <p class="appointment-time">11:30 AM</p>
+          </div>
+          
+          <!-- Appointment 3 -->
+          <div class="appointment-item">
+            <div class="appointment-info">
+              <img src="https://storage.googleapis.com/a1aa/image/zTFcpOc1tGXr43WhuvY49HlgTGjReMEDXxtxq5j2s90.jpg" alt="Profile picture of Patient 3" class="patient-image"/>
+              <div>
+                <p class="patient-name">Patient 3</p>
+                <p class="appointment-type">Type 3</p>
+              </div>
+            </div>
+            <p class="appointment-time">02:00 PM</p>
+          </div>
+          
+          <!-- Appointment 4 -->
+          <div class="appointment-item">
+            <div class="appointment-info">
+              <img src="https://storage.googleapis.com/a1aa/image/wafTCUCqP-tPjXQ-B6gK6lUUvuPbbVFlOeuHQsvMDl8.jpg" alt="Profile picture of Patient 4" class="patient-image"/>
+              <div>
+                <p class="patient-name">Patient 4</p>
+                <p class="appointment-type">Type 4</p>
+              </div>
+            </div>
+            <p class="appointment-time">03:30 PM</p>
+          </div>
+          
+          <!-- Appointment 5 -->
+          <div class="appointment-item">
+            <div class="appointment-info">
+              <img src="https://storage.googleapis.com/a1aa/image/BLVK7EvEQVJ7CPCpSZcDaGwBHSLaDJQ_Kc77aJOf3cw.jpg" alt="Profile picture of Patient 5" class="patient-image"/>
+              <div>
+                <p class="patient-name">Patient 5</p>
+                <p class="appointment-type">Type 5</p>
+              </div>
+            </div>
+            <p class="appointment-time">05:00 PM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('collapsed');
+    }
+  </script>
+</body>
 </html>
-
-
-Upload Files
-
-
-
